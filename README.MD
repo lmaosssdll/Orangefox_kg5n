@@ -30,7 +30,7 @@ Minor checks
 - [x] poweroff
 - [x] battery level
 - [x] temperature
-- [x] encrypted backups
+- [ ] encrypted backups
 - [x] input devices via USB (USB-OTG) - keyboard, mouse and disks
 - [x] USB mass storage export
 - [x] set brightness
