@@ -53,7 +53,7 @@ BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 TARGET_OTA_ASSERT_DEVICE := TECNO-KG5n,TECNO-KG5k,KG5n,KG5k,kg5n,kg5k
 
 # TEMP
-TW_CUSTOM_CPU_TEMP_PATH = /sys/devices/platform/soc/soc:aon/64200000.spi/spi_master/spi4/spi4.0/sc27xx-fgu/power_supply/sc27xx-fgu/temp
+TW_CUSTOM_CPU_TEMP_PATH := /sys/devices/platform/soc/soc:aon/64200000.spi/spi_master/spi4/spi4.0/sc27xx-fgu/power_supply/sc27xx-fgu/temp
 
 # Kernel - prebuilt
 TARGET_FORCE_PREBUILT_KERNEL := true
@@ -69,7 +69,7 @@ TARGET_BOARD_PLATFORM := ums9230
 PRODUCT_PLATFORM := ums9230
 TARGET_SOC := ums9230_1h10
 
-# A/B
+# A/B & Dynamic Partitions
 AB_OTA_UPDATER := true
 AB_OTA_PARTITIONS += \
     vbmeta \
@@ -102,10 +102,10 @@ BOARD_UNISOC_B_PARTITION_LIST := system system_ext vendor product
 BOARD_UNISOC_B_SIZE := 9122611200
 TARGET_COPY_OUT_VENDOR := vendor
 TARGET_COPY_OUT_PRODUCT := product
-TARGET_COPY_OUT_SYSTEM_EXT = system_ext
+TARGET_COPY_OUT_SYSTEM_EXT := system_ext
 
 # PARTITION SIZE
-BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)
+BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_HAS_LARGE_FILESYSTEM := true
 
@@ -122,30 +122,50 @@ BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE := ext4
 # SYSTEM-AS-ROOT
 BOARD_SUPPRESS_SECURE_ERASE := true
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
-BOARD_ROOT_EXTRA_FOLDERS := socko odmko
+BOARD_ROOT_EXTRA_FOLDERS := socko odmko metadata usb-otg
 
-# METADATA
+# ==========================================
+# РАСШИФРОВКА DАТА (DECRYPTION / CRYPTO)
+# ==========================================
 BOARD_USES_METADATA_PARTITION := true
-BOARD_ROOT_EXTRA_FOLDERS += metadata
+TW_INCLUDE_CRYPTO := true
+TW_INCLUDE_CRYPTO_FBE := true
+TW_INCLUDE_FBE_METADATA_DECRYPT := true
+TW_USE_FSCRYPT_POLICY := 2
 
-# MODULES
+# MODULES (Включены службы Unisoc!)
 TARGET_RECOVERY_DEVICE_MODULES += \
-#    libkeymaster41 \
-#    libpuresoftkeymasterdevice \
+    libkeymaster41 \
+    libpuresoftkeymasterdevice \
     ashmemd_aidl_interface-cpp \
-    libashmemd_client
+    libashmemd_client \
+    android.hardware.keymaster@4.1-unisoc.service \
+    android.hardware.gatekeeper@1.0-service
 
-# LIBRARIES
+# LIBRARIES (Включены библиотеки Unisoc!)
 RECOVERY_LIBRARY_SOURCE_FILES += \
-#    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster41.so \
-#    $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster41.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/ashmemd_aidl_interface-cpp.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libashmemd_client.so
-	
-# VERSION
-TW_DEVICE_VERSION := RadGoodNow@4pda and artumes@4pda
 
-# Hack: prevent anti rollback
+# ==========================================
+# НАСТРОЙКИ ORANGEFOX (OF SETTINGS)
+# ==========================================
+OFOX_AB_DEVICE := true
+OFOX_VIRTUAL_AB_DEVICE := true
+FOX_RECOVERY_INSTALL_PARTITION := "/boot"
+FOX_RECOVERY_SYSTEM_PARTITION := "/system"
+FOX_TARGET_DEVICES := "KG5n,KG5k,TECNO-KG5n,TECNO-KG5k"
+FOX_EXCLUDE_RECOVERY_IMG := true
+OFOX_ENABLE_SECURITY := true
+OFOX_NO_TREBLE_COMPATIBILITY_CHECK := true
+OFOX_KEEP_FORCED_ENCRYPTION := true
+FOX_BUILD_TYPE := "Unofficial"
+FOX_VERSION := "R11.1"
+
+# VERSION & ANTI-ROLLBACK
+TW_DEVICE_VERSION := RadGoodNow@4pda and artumes@4pda
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
 PLATFORM_VERSION := 16.1.0
@@ -174,7 +194,6 @@ TW_OVERRIDE_SYSTEM_PROPS := "ro.build.version.sdk"
 # MTP
 TW_HAS_MTP := true
 TW_MTP_DEVICE := /dev/mtp_usb
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage/lun.%d/file
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.usb0/lun.%d/file
 
 # Display
@@ -187,15 +206,9 @@ TW_THEME := portrait_hdpi
 TARGET_USES_LOGD := true
 TWRP_EVENT_LOGGING := true
 TWRP_INCLUDE_LOGCAT := true
-TARGET_RECOVERY_DEVICE_MODULES += debuggerd
-RECOVERY_BINARY_SOURCE_FILES += $(TARGET_OUT_EXECUTABLES)/debuggerd
-TARGET_RECOVERY_DEVICE_MODULES += strace
-RECOVERY_BINARY_SOURCE_FILES += $(TARGET_OUT_EXECUTABLES)/strace
+TARGET_RECOVERY_DEVICE_MODULES += debuggerd strace
+RECOVERY_BINARY_SOURCE_FILES += $(TARGET_OUT_EXECUTABLES)/debuggerd $(TARGET_OUT_EXECUTABLES)/strace
 
 # SDCARD AND OTG
 TW_USE_EXTERNAL_STORAGE := true
 RECOVERY_SDCARD_ON_DATA := true
-BOARD_ROOT_EXTRA_FOLDERS += usb-otg
-# BOARD_ROOT_EXTRA_FOLDERS += external_sd
-
-# unofficialtwrp.com stop stealing our twrp images
