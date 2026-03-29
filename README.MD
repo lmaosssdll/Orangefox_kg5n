@@ -18,7 +18,7 @@ Medium checks
 - [x] all important partitions listed in mount/backup lists
 - [x] backup/restore to/from external (USB-OTG) storage
 - [x] backup/restore to/from adb
-- [ ] decrypt /data
+- [x] decrypt /data
 - [x] Correct date
 
 Minor checks
@@ -28,7 +28,7 @@ Minor checks
 - [x] poweroff
 - [x] battery level
 - [x] temperature
-- [ ] encrypted backups
+- [x] encrypted backups
 - [x] input devices via USB (USB-OTG) - keyboard, mouse and disks
 - [x] USB mass storage export
 - [x] set brightness
