@@ -1,6 +1,7 @@
-# Twrp Recovery Tree for Tecno Spark 8C KG5n
+# Orange Fox Recovery Tree for Tecno Spark 8C KG5n
 
- created by RadGoodNow and arturmes
+ original created by RadGoodNow and arturmes
+fork created by lmaosssdll
 
  Blocking checks
 - [x] Correct screen/recovery size
