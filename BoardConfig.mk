@@ -195,17 +195,19 @@ TW_MTP_DEVICE := /dev/mtp_usb
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.usb0/lun.%d/file
 
 # Display
-TW_FRAMERATE := 90
+TW_FRAMERATE := 60
 TARGET_SCREEN_DENSITY := 320
-TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
+TARGET_RECOVERY_PIXEL_FORMAT := BGRA_8888
 TW_THEME := portrait_hdpi
 TW_MAX_BRIGHTNESS := 4095
 TW_DEFAULT_BRIGHTNESS := 1200
 
-# Самые главные команды (Костыли для зависшего логотипа)
+# Отключаем графический процессор (GPU)
+TARGET_USES_SOFTWARE_RENDERING := true
+
+# Костыли для сброса логотипа
 TW_NO_SCREEN_BLANK := true
 TW_SCREEN_BLANK_ON_BOOT := true
-TARGET_HAS_FUSION_COMPOSITOR := false
 
 # Debug
 TARGET_USES_LOGD := true
