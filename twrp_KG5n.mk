@@ -23,9 +23,9 @@ $(call inherit-product, device/tecno/KG5n/device.mk)
 
 PRODUCT_DEVICE := KG5n
 # ==========================================
-# ВАЖНО: Меняем имя продукта с twrp на fox
+# ВАЖНО: Меняем имя продукта с fox на twrp
 # ==========================================
-PRODUCT_NAME := fox_KG5n
+PRODUCT_NAME := twrp_KG5n
 PRODUCT_BRAND := Tecno
 PRODUCT_MODEL := KG5n
 PRODUCT_MANUFACTURER := Tecno Mobility Limited
