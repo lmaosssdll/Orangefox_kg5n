@@ -13,18 +13,13 @@ $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 # Install gsi keys into ramdisk, to boot a developer GSI with verified boot
 $(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
 
-# ==========================================
-# ВАЖНО: Подключаем исходники OrangeFox!
-# ==========================================
-$(call inherit-product, vendor/recovery/orangefox.mk)
+# Inherit some common TWRP stuff (ВОЗВРАЩАЕМ ЭТУ СТРОКУ)
+$(call inherit-product, vendor/twrp/config/common.mk)
 
 # INHERIT FROM THIS DEVICE TREE
 $(call inherit-product, device/tecno/KG5n/device.mk)
 
 PRODUCT_DEVICE := KG5n
-# ==========================================
-# ВАЖНО: Меняем имя продукта с fox на twrp
-# ==========================================
 PRODUCT_NAME := twrp_KG5n
 PRODUCT_BRAND := Tecno
 PRODUCT_MODEL := KG5n
