@@ -197,12 +197,15 @@ TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.
 # Display
 TW_FRAMERATE := 90
 TARGET_SCREEN_DENSITY := 320
-TARGET_USES_DRM_PP := true
-TW_GRFB_FRAMES_PER_SECOND := 60
-TARGET_RECOVERY_OLED_PATCH := true
+TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 TW_THEME := portrait_hdpi
 TW_MAX_BRIGHTNESS := 4095
 TW_DEFAULT_BRIGHTNESS := 1200
+
+# Самые главные команды (Костыли для зависшего логотипа)
+TW_NO_SCREEN_BLANK := true
+TW_SCREEN_BLANK_ON_BOOT := true
+TARGET_HAS_FUSION_COMPOSITOR := false
 
 # Debug
 TARGET_USES_LOGD := true
