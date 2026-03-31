@@ -127,6 +127,7 @@ BOARD_ROOT_EXTRA_FOLDERS := socko odmko metadata usb-otg
 # ==========================================
 # УБИВАЕМ ШИФРОВАНИЕ (ЧТОБЫ НЕ ВИСЛО ЯДРО)
 # ==========================================
+TW_INCLUDE_CRYPTO := true
 TW_EXCLUDE_ENCRYPTED_BACKUPS := true
 OFOX_KEEP_FORCED_ENCRYPTION := true
 
