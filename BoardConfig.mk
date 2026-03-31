@@ -128,8 +128,15 @@ BOARD_ROOT_EXTRA_FOLDERS := socko odmko metadata usb-otg
 # УБИВАЕМ ШИФРОВАНИЕ (ЧТОБЫ НЕ ВИСЛО ЯДРО)
 # ==========================================
 TW_INCLUDE_CRYPTO := true
-TW_EXCLUDE_ENCRYPTED_BACKUPS := true
-OFOX_KEEP_FORCED_ENCRYPTION := true
+TW_INCLUDE_CRYPTO_FBE := true
+TW_INCLUDE_FBE_METADATA_DECRYPT := true
+BOARD_USES_METADATA_PARTITION := true
+TARGET_RECOVERY_DEVICE_MODULES += \
+    ashmemd_aidl_interface-cpp \
+    libashmemd_client
+RECOVERY_LIBRARY_SOURCE_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/ashmemd_aidl_interface-cpp.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libashmemd_client.so
 
 # ==========================================
 # НАСТРОЙКИ ORANGEFOX (OF SETTINGS)
