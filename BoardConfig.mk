@@ -185,6 +185,12 @@ TW_DEFAULT_BRIGHTNESS := 1200
 TW_NO_SCREEN_BLANK := true
 TW_SCREEN_BLANK_ON_BOOT := true
 
+# ==========================================
+# УКАЗЫВАЕМ БАЗУ ANDROID 11
+# ==========================================
+PLATFORM_VERSION := 11
+PLATFORM_VERSION_LAST_STABLE := 11
+
 # Debug
 TARGET_USES_LOGD := true
 TWRP_EVENT_LOGGING := true
