@@ -125,29 +125,10 @@ BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
 BOARD_ROOT_EXTRA_FOLDERS := socko odmko metadata usb-otg
 
 # ==========================================
-# РАСШИФРОВКА DАТА (DECRYPTION / CRYPTO)
+# УБИВАЕМ ШИФРОВАНИЕ (ЧТОБЫ НЕ ВИСЛО ЯДРО)
 # ==========================================
-BOARD_USES_METADATA_PARTITION := true
-TW_INCLUDE_CRYPTO := true
-TW_INCLUDE_CRYPTO_FBE := true
-TW_INCLUDE_FBE_METADATA_DECRYPT := true
-TW_USE_FSCRYPT_POLICY := 2
-
-# MODULES (Включены службы Unisoc!)
-TARGET_RECOVERY_DEVICE_MODULES += \
-    libkeymaster41 \
-    libpuresoftkeymasterdevice \
-    ashmemd_aidl_interface-cpp \
-    libashmemd_client \
-    android.hardware.keymaster@4.1-unisoc.service \
-    android.hardware.gatekeeper@1.0-service
-
-# LIBRARIES (Включены библиотеки Unisoc!)
-RECOVERY_LIBRARY_SOURCE_FILES += \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster41.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/ashmemd_aidl_interface-cpp.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libashmemd_client.so
+TW_EXCLUDE_ENCRYPTED_BACKUPS := true
+OFOX_KEEP_FORCED_ENCRYPTION := true
 
 # ==========================================
 # НАСТРОЙКИ ORANGEFOX (OF SETTINGS)
@@ -195,17 +176,12 @@ TW_MTP_DEVICE := /dev/mtp_usb
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.usb0/lun.%d/file
 
 # Display
-TW_FRAMERATE := 60
+TW_FRAMERATE := 90
 TARGET_SCREEN_DENSITY := 320
-TARGET_RECOVERY_PIXEL_FORMAT := BGRA_8888
+TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 TW_THEME := portrait_hdpi
 TW_MAX_BRIGHTNESS := 4095
 TW_DEFAULT_BRIGHTNESS := 1200
-
-# Отключаем графический процессор (GPU)
-TARGET_USES_SOFTWARE_RENDERING := true
-
-# Костыли для сброса логотипа
 TW_NO_SCREEN_BLANK := true
 TW_SCREEN_BLANK_ON_BOOT := true
 
