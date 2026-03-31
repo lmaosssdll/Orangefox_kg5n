@@ -192,6 +192,7 @@ TW_MAX_BRIGHTNESS := 4095
 TW_DEFAULT_BRIGHTNESS := 1200
 TW_NO_SCREEN_BLANK := true
 TW_SCREEN_BLANK_ON_BOOT := true
+TARGET_USES_DRM_PP := false
 TW_USE_MINUI_WITH_FB := true
 
 # ==========================================
