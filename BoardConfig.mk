@@ -1,16 +1,16 @@
 # DEVICE PATH
 DEVICE_PATH := device/tecno/KG5n
-TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 
-# BUILD
+# BUILDING SUPPORT
 ALLOW_MISSING_DEPENDENCIES := true
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 
-# ARCH
+# ARCHITECTURE
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
+TARGET_CPU_ABI2 := 
 TARGET_CPU_VARIANT := generic
 TARGET_CPU_VARIANT_RUNTIME := cortex-a75
 
@@ -22,133 +22,112 @@ TARGET_2ND_CPU_VARIANT := generic
 TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a55
 
 TARGET_CPU_SMP := true
+ENABLE_CPUSETS := true
+ENABLE_SCHEDBOOST := true
 
 # 64-bit
 TARGET_SUPPORTS_64_BIT_APPS := true
 TARGET_IS_64_BIT := true
 
-# Bootloader
+# BOOTLOADER
 TARGET_NO_RADIOIMAGE := true
 TARGET_NO_BOOTLOADER := true
 TARGET_BOOTLOADER_BOARD_NAME := KG5n
+TARGET_USES_UEFI := true
 
-# MKBOOT
-BOARD_BOOTIMG_HEADER_VERSION := 2
+# KERNEL & BOOTIMG (offsets from original tree)
+BOARD_KERNEL_CMDLINE := audit=0 console=ttyS1,115200n8 earlycon=uart8250,mmio32,0x7010000000000000000000000
 BOARD_KERNEL_BASE := 0x00000000
-BOARD_KERNEL_CMDLINE := audit=0 console=ttyS1,115200n8
 BOARD_KERNEL_PAGESIZE := 2048
+BOARD_KERNEL_OFFSET := 0x00008000
 BOARD_RAMDISK_OFFSET := 0x05400000
+BOARD_KERNEL_SECOND_OFFSET := 0x00000000
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
+BOARD_DTB_OFFSET := 0x01f00000
+BOARD_BOOTIMG_HEADER_VERSION := 2
 
-BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
-BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
+BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
+BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
+BOARD_MKBOOTIMG_ARGS += --dtb $(DEVICE_PATH)/prebuilt/dtb.img
+BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 
-BOARD_KERNEL_IMAGE_NAME := Image
+# PARTITION SIZES
+BOARD_FLASH_BLOCK_SIZE := 131072
+BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
+BOARD_HAS_NO_REAL_SDCARD := true
 
-# Kernel
-TARGET_FORCE_PREBUILT_KERNEL := true
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
-TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
-BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
+# DYNAMIC PARTITIONS
+BOARD_SUPER_PARTITION_GROUPS := tecno_dynamic_partitions
+BOARD_TECNO_DYNAMIC_PARTITIONS_SIZE := 9122611200
+BOARD_TECNO_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext vendor product
 
-# PLATFORM
-TARGET_BOARD_PLATFORM := ums9230
-TARGET_SOC := ums9230_1h10
-
-# A/B
-AB_OTA_UPDATER := true
-AB_OTA_PARTITIONS += \
-    vbmeta vbmeta_system vbmeta_system_ext vbmeta_product vbmeta_vendor \
-    dtbo boot system system_ext vendor product odmko
-
-# AVB
-BOARD_AVB_ENABLE := true
-BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
-
-# SUPER
-BOARD_SUPER_PARTITION_GROUPS := unisoc_a unisoc_b
-BOARD_SUPER_PARTITION_SIZE := 9126805504
-
-BOARD_UNISOC_A_PARTITION_LIST := system system_ext vendor product
-BOARD_UNISOC_A_SIZE := 9122611200
-
-BOARD_UNISOC_B_PARTITION_LIST := system system_ext vendor product
-BOARD_UNISOC_B_SIZE := 9122611200
-
-TARGET_COPY_OUT_VENDOR := vendor
-TARGET_COPY_OUT_PRODUCT := product
-TARGET_COPY_OUT_SYSTEM_EXT := system_ext
-
-# FILESYSTEMS
-TARGET_USERIMAGES_USE_F2FS := true
-TARGET_USERIMAGES_USE_EXT4 := true
-BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
-
-# METADATA
+# RECOVERY AS BOOT (V-A/B)
+BOARD_USES_RECOVERY_AS_BOOT := true
+TARGET_NO_RECOVERY := true
+TW_HAS_NO_RECOVERY_PARTITION := true
 BOARD_USES_METADATA_PARTITION := true
 
 # ==========================================
-# ORANGEFOX (SAFE MODE)
-# ==========================================
-OF_USE_TWRP_GUI := true
-OFOX_AB_DEVICE := true
-OFOX_VIRTUAL_AB_DEVICE := true
-
-FOX_RECOVERY_INSTALL_PARTITION := "/boot"
-FOX_RECOVERY_SYSTEM_PARTITION := "/system"
-
-FOX_TARGET_DEVICES := KG5n,KG5k,TECNO-KG5n,TECNO-KG5k
-
-# ❗ ОТКЛЮЧАЕМ ПРОБЛЕМНЫЕ ФИЧИ
-# OFOX_ENABLE_SECURITY := true
-# OFOX_KEEP_FORCED_ENCRYPTION := true
-
-# ==========================================
-# DISPLAY (СТАБИЛЬНО)
+# DISPLAY & GRAPHICS (FIX FOR ATOMIC COMMIT -22)
 # ==========================================
 TW_THEME := portrait_hdpi
 TARGET_SCREEN_DENSITY := 320
+TW_FRAMERATE := 90
 
-TW_USE_MINUI_WITH_FB := true
-TW_USE_MINUI_WITH_DRM := false
-TW_USE_OPENGL_RENDERER := false
-
-TW_FB_DEVICE := /dev/graphics/fb0
+# Ошибка -22 часто лечится правильным форматом пикселей.
+# В оригинале RGBX_8888, пробуем его, но с поддержкой DRM
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 
+# Явно включаем DRM и выключаем кривой FB
+TW_USE_MINUI_WITH_DRM := true
+TW_USE_MINUI_WITH_FB := false
+
+# Рендерер для OrangeFox UI
+TW_USE_OPENGL_RENDERER := true
+TW_INCLUDE_LIBGGL := true
+TW_NO_RECOVERY_BLUR := true
+
+# Путь яркости из твоего лога (recovery.log)
+TW_BRIGHTNESS_PATH := "/sys/devices/platform/soc/soc:ap-ahb/31100000.dsi/31100000.dsi.0/display/panel0/sprd_backlight/brightness"
 TW_MAX_BRIGHTNESS := 4095
 TW_DEFAULT_BRIGHTNESS := 1200
 
+# Чтобы не гас экран в процессе
 TW_NO_SCREEN_BLANK := true
 TW_SCREEN_BLANK_ON_BOOT := false
 
 # ==========================================
-# RECOVERY
+# ORANGEFOX FLAGS (OFOX)
 # ==========================================
-BOARD_USES_RECOVERY_AS_BOOT := true
-TARGET_NO_RECOVERY := true
-TW_HAS_NO_RECOVERY_PARTITION := true
+FOX_VERSION := R11.3
+FOX_BUILD_TYPE := Stable
+FOX_RECOVERY_INSTALL_PARTITION := "/boot"
+FOX_RECOVERY_SYSTEM_PARTITION := "/system"
+FOX_VIRTUAL_AB_DEVICE := true
+AB_OTA_UPDATER := true
 
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
+# Опции системы и инструментов
+FOX_REPLACE_TOOLBOX_GETPROP := 1
+FOX_USE_TAR_BINARY := 1
+FOX_USE_SED_BINARY := 1
+FOX_USE_XZ_UTILS := 1
+FOX_ASH_IS_BASH := 1
+FOX_ENABLE_APP_MANAGER := 1
 
-# ==========================================
-# TOOLS
-# ==========================================
-TW_INCLUDE_RESETPROP := true
-TW_INCLUDE_REPACKTOOLS := true
+# Безопасность и исключения
+TW_EXCLUDE_APEX := true
+TW_EXCLUDE_DEFAULT_USB_INIT := true
+TW_INCLUDE_CRYPTO := true
 TW_USE_TOOLBOX := true
+TW_NO_LEGACY_PROPS := true
 
-# DEBUG
-TARGET_USES_LOGD := true
-TWRP_INCLUDE_LOGCAT := true
+# ==========================================
+# MTP & USB
+# ==========================================
+TW_HAS_MTP := true
+TW_MTP_DEVICE := /dev/mtp_usb
+TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage/lun.%d/file
 
-# STORAGE
-TW_USE_EXTERNAL_STORAGE := true
-RECOVERY_SDCARD_ON_DATA := true
-
-# VERSION
-TW_DEVICE_VERSION := KG5n_fox_stable
-PLATFORM_VERSION := 11
-PLATFORM_SECURITY_PATCH := 2099-12-31
-VENDOR_SECURITY_PATCH := 2099-12-31
+# FSTAB
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
