@@ -200,4 +200,15 @@ RECOVERY_SDCARD_ON_DATA := true
 BOARD_ROOT_EXTRA_FOLDERS += usb-otg
 # BOARD_ROOT_EXTRA_FOLDERS += external_sd
 
+TW_INCLUDE_CRYPTO := true
+TW_INCLUDE_CRYPTO_FBE := true
+TW_INCLUDE_FBE_METADATA_DECRYPT := true
+BOARD_USES_METADATA_PARTITION := true
+BOARD_USES_TRUSTY := true
+
+# Разрешаем запуск вендорных сервисов из папки recovery/root
+TW_RECOVERY_ADDITIONAL_RELINK_FILES += \
+    $(TARGET_OUT_VENDOR_EXECUTABLES)/hw/android.hardware.gatekeeper@1.0-service.trusty \
+    $(TARGET_OUT_VENDOR_EXECUTABLES)/hw/android.hardware.keymaster@4.1-unisoc.service
+
 # unofficialtwrp.com stop stealing our twrp images
