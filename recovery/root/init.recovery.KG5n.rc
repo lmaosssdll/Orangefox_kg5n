@@ -1,5 +1,6 @@
 #add for board init.rc for recovery mode
 import /init.recovery.common.rc
+
 service logd /system/bin/logd
     socket logd stream 0666 logd logd
     socket logdr seqpacket 0666 logd logd
@@ -28,10 +29,23 @@ on init
     symlink /vendor/firmware /system/etc/firmware
     setprop persist.sys.usb.config mtp,adb
 
-# Mix device-specific information into the entropy pool
+    # Mix device-specific information into the entropy pool
     copy /proc/cmdline /dev/urandom
 
 on fs
-# Sensor
+    # Sensor
     insmod /socko/mali_kbase.ko
     insmod /socko/adaptive-ts.ko
+
+# =========================================================
+# МАГИЯ ПОДМЕНЫ FSTAB (ЧТОБЫ УБРАТЬ INLINECRYPT)
+# =========================================================
+on post-fs
+    mount none /system/etc/recovery.fstab /vendor/etc/fstab.KG5n bind
+    mount none /system/etc/recovery.fstab /vendor/etc/fstab.ums9230 bind
+    mount none /system/etc/recovery.fstab /odm/etc/fstab.KG5n bind
+
+on boot
+    mount none /system/etc/recovery.fstab /vendor/etc/fstab.KG5n bind
+    mount none /system/etc/recovery.fstab /vendor/etc/fstab.ums9230 bind
+    mount none /system/etc/recovery.fstab /odm/etc/fstab.KG5n bind
