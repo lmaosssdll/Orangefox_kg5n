@@ -214,6 +214,7 @@ TW_INCLUDE_CRYPTO_FBE := true
 TW_INCLUDE_FBE_METADATA_DECRYPT := true
 BOARD_USES_METADATA_PARTITION := true
 BOARD_USES_TRUSTY := true
+BOARD_USES_QCOM_FBE_DECRYPTION := false
 
 # Разрешаем запуск вендорных сервисов из папки recovery/root
 TW_RECOVERY_ADDITIONAL_RELINK_FILES += \
